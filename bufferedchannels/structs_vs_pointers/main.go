@@ -37,21 +37,26 @@ func main() {
 		int(unsafe.Sizeof(MediumStruct{})),
 		int(unsafe.Sizeof(LargeStruct{})))
 
-	a := make(chan SmallStruct, 100000)
-	c := make(chan SmallStruct, 1)
-	b := make(chan *SmallStruct, 100000)
+	sa := make(chan SmallStruct, 100000)
+	sb := make(chan *SmallStruct, 100000)
+	sc := make(chan SmallStruct, 1)
+	sd := make(chan *SmallStruct, 1)
 
-	d := make(chan MediumStruct, 100000)
-	e := make(chan *MediumStruct, 100000)
-	f := make(chan MediumStruct, 1)
+	ma := make(chan MediumStruct, 100000)
+	mb := make(chan *MediumStruct, 100000)
+	mc := make(chan MediumStruct, 1)
+	md := make(chan *MediumStruct, 1)
 
-	g := make(chan LargeStruct, 100000)
-	h := make(chan *LargeStruct, 100000)
-	i := make(chan LargeStruct, 1)
+	la := make(chan LargeStruct, 100000)
+	lb := make(chan *LargeStruct, 100000)
+	lc := make(chan LargeStruct, 1)
+	ld := make(chan *LargeStruct, 1)
 
 	//debug.FreeOSMemory()
 	runtime.GC()
 
-	var _, _, _, _, _, _, _, _, _ = a, b, c, d, e, f, g, h, i
-	fmt.Println(a, b, c, d, e, f, g, h, i)
+	fmt.Println(sa, sb, sc, sd,
+		ma, mb, mc, md,
+		la, lb, lc, ld,
+	)
 }
