@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"crypto/rand"
 	"encoding/gob"
+	"flag"
 	"fmt"
 	"io"
 	"net"
@@ -26,6 +27,15 @@ var conn net.Conn
 var randomID string
 
 func main() {
+	var (
+		//192.168.1.10:8108
+		peer = flag.String("addr", "value", "Address to connect to")
+	)
+
+	flag.Parse()
+
+	addr := *peer
+
 	random := make([]byte, 10)
 	rand.Read(random)
 	randomID = fmt.Sprintf("%x", random)
@@ -33,14 +43,14 @@ func main() {
 
 	var err error
 	// connect to this socket
-	conn, err = net.Dial("tcp", "10.41.0.5:8110") //dialer.Dial("tcp", "127.0.0.1:8081")
+	conn, err = net.Dial("tcp", addr) //dialer.Dial("tcp", "127.0.0.1:8081")
 	for err != nil {
 		time.Sleep(1 * time.Second)
-		conn, err = net.Dial("tcp", "10.41.0.5:8110")
+		conn, err = net.Dial("tcp", addr)
 		fmt.Println(err.Error())
 	}
 
-	go alwaysRead()
+	go alwaysRead(addr)
 	for {
 		// read in input from stdin
 		reader := bufio.NewReader(os.Stdin)
@@ -51,7 +61,7 @@ func main() {
 	}
 }
 
-func alwaysRead() {
+func alwaysRead(addr string) {
 	dec := gob.NewDecoder(conn)
 	for {
 		//conn.SetReadDeadline(time.Now().Add(time.Duration(1) * time.Second))
@@ -62,7 +72,7 @@ func alwaysRead() {
 			fmt.Println(err)
 			if err == io.EOF {
 				time.Sleep(1 * time.Second)
-				conn, err = net.Dial("tcp", "127.0.0.1:8081")
+				conn, err = net.Dial("tcp", addr)
 				fmt.Println(err)
 				if err == nil {
 					dec = gob.NewDecoder(conn)
@@ -71,6 +81,6 @@ func alwaysRead() {
 			}
 			continue
 		}
-		fmt.Print("\nMessage from server: " + m.String())
+		//fmt.Print("\nMessage from server: " + m.String())
 	}
 }
