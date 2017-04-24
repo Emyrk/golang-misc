@@ -1,14 +1,12 @@
 package main
 
 import (
-	"bufio"
 	"crypto/rand"
 	"encoding/gob"
 	"flag"
 	"fmt"
 	"io"
 	"net"
-	"os"
 	"time"
 
 	"github.com/FactomProject/factomd/p2p"
@@ -29,7 +27,7 @@ var randomID string
 func main() {
 	var (
 		//192.168.1.10:8108
-		peer = flag.String("addr", "value", "Address to connect to")
+		peer = flag.String("addr", "192.168.1.10:8108", "Address to connect to")
 	)
 
 	flag.Parse()
@@ -52,12 +50,13 @@ func main() {
 
 	go alwaysRead(addr)
 	for {
+		time.Sleep(2 * time.Second)
 		// read in input from stdin
-		reader := bufio.NewReader(os.Stdin)
-		fmt.Print("Text to send: ")
-		text, _ := reader.ReadString('\n')
+		// reader := bufio.NewReader(os.Stdin)
+		//fmt.Print("Type in ASCII bytes to: ")
+		//text, _ := reader.ReadString('\n')
 		// send to socket
-		fmt.Fprintf(conn, text+"\n")
+		//fmt.Fprintf(conn, text+"\n")
 	}
 }
 
@@ -69,17 +68,21 @@ func alwaysRead(addr string) {
 		// fmt.Println("Reading...")
 		err := dec.Decode(&m) //bufio.NewReader(conn).ReadString('\n')
 		if err != nil {
-			fmt.Println(err)
-			if err == io.EOF {
+			fmt.Printf("Error recieveing Message: %s\n Going to Reconnect...\n", err.Error())
+			if err == io.EOF || err != nil {
 				time.Sleep(1 * time.Second)
 				conn, err = net.Dial("tcp", addr)
-				fmt.Println(err)
 				if err == nil {
+					fmt.Printf("Reconnected!\n")
 					dec = gob.NewDecoder(conn)
 					fmt.Fprintf(conn, randomID+"\n")
+				} else {
+					fmt.Printf("Reconnect failed: %s\nTrying again....\n", err.Error())
 				}
 			}
 			continue
+		} else {
+			fmt.Printf("Recieved a %s message of %d length payload from %s network.\n", m.MessageType(), len(m.Payload), m.Header.Network.String())
 		}
 		//fmt.Print("\nMessage from server: " + m.String())
 	}
