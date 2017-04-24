@@ -8,6 +8,7 @@ import (
 	"io"
 	"net"
 	"os"
+	"strings"
 	"sync/atomic"
 	"time"
 
@@ -35,9 +36,9 @@ func main() {
 	)
 
 	flag.Parse()
+	peerStrings := strings.Split(*peer, " ")
 
 	s := NewStatMaintainer()
-	addr := *peer
 	os.Remove("errs.txt")
 	errFile, err := os.OpenFile("errs.txt", os.O_CREATE|os.O_RDWR, 0777)
 	if err != nil {
@@ -46,14 +47,16 @@ func main() {
 	ErrorFile = errFile
 	ErrorFile.WriteString("Error file\n")
 
-	peers := make([]*BadPeer, 100)
-	for i := 0; i < len(peers); i++ {
-		random := make([]byte, 10)
-		rand.Read(random)
-		randomID = fmt.Sprintf("%x", random)
-		peers[i] = NewBadPeer(randomID, addr)
-		peers[i].Stats = s
-		peers[i].StartBadPeer()
+	for _, peerAddr := range peerStrings {
+		peers := make([]*BadPeer, 100)
+		for i := 0; i < len(peers); i++ {
+			random := make([]byte, 10)
+			rand.Read(random)
+			randomID = fmt.Sprintf("%x", random)
+			peers[i] = NewBadPeer(randomID, peerAddr)
+			peers[i].Stats = s
+			peers[i].StartBadPeer()
+		}
 	}
 
 	for {
