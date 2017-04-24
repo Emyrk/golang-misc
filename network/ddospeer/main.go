@@ -33,6 +33,7 @@ func main() {
 	var (
 		//192.168.1.10:8108
 		peer = flag.String("addr", "192.168.1.10:8108", "Address to connect to")
+		n    = flag.Int("n", 100, "Number of connections per peer")
 	)
 
 	flag.Parse()
@@ -48,7 +49,7 @@ func main() {
 	ErrorFile.WriteString("Error file\n")
 
 	for _, peerAddr := range peerStrings {
-		peers := make([]*BadPeer, 100)
+		peers := make([]*BadPeer, *n)
 		for i := 0; i < len(peers); i++ {
 			random := make([]byte, 10)
 			rand.Read(random)
