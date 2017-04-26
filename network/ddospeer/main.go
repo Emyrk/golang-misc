@@ -154,16 +154,23 @@ func (b *BadPeer) spam(ps int) {
 	factom.SetFactomdServer(arr[0] + ":8088")
 	enc := gob.NewEncoder(b.Connection)
 	ticker := time.NewTicker(tickertime)
-	for _ = range ticker.C {
-		h, err := factom.GetHeights()
-		if err != nil {
-			//time.Sleep(100 * time.Millisecond)
-			continue
-		}
-		height := h.LeaderHeight
 
-		par := makeAck(height)
-		err = enc.Encode(par)
+	a := new(AckMaker)
+	last := time.Now()
+	var height int64
+	for _ = range ticker.C {
+		if time.Since(last).Seconds() > 10 {
+			h, err := factom.GetHeights()
+			if err != nil {
+				//time.Sleep(100 * time.Millisecond)
+				continue
+			}
+			height = h.LeaderHeight
+			last = time.Now()
+		}
+
+		par := a.makeAck(height)
+		err := enc.Encode(par)
 		if err != nil {
 			//time.Sleep(100 * time.Millisecond)
 			continue
@@ -173,28 +180,40 @@ func (b *BadPeer) spam(ps int) {
 	}
 }
 
-func makeAck(height int64) *p2p.Parcel {
-	vmIndex := 0
+// AckMaker makes acks
+type AckMaker struct {
+	Ack     *messages.Ack
+	AckData []byte
 
-	ack := new(messages.Ack)
-	ack.DBHeight = uint32(height) - 1
-	ack.VMIndex = vmIndex
-	ack.Minute = byte(random.RandIntBetween(0, 9))
-	ack.Timestamp = primitives.NewTimestampNow()
-	ack.SaltNumber = 0
-	copy(ack.Salt[:8], []byte{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00})
-	ack.MessageHash = primitives.NewZeroHash()
-	ack.LeaderChainID = DefID
-	ack.BalanceHash = primitives.NewZeroHash()
+	P *p2p.Parcel
+}
 
-	ack.Height = 0
-	ack.SerialHash = ack.MessageHash
-	ack.Sign(DefKey)
+func (a *AckMaker) makeAck(height int64) *p2p.Parcel {
+	if a.Ack == nil || a.Ack.Height < uint32(height) {
+		vmIndex := 0
 
-	data, _ := ack.MarshalBinary()
+		ack := new(messages.Ack)
+		ack.DBHeight = uint32(height) - 1
+		ack.VMIndex = vmIndex
+		ack.Minute = byte(random.RandIntBetween(0, 9))
+		ack.Timestamp = primitives.NewTimestampNow()
+		ack.SaltNumber = 0
+		copy(ack.Salt[:8], []byte{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00})
+		ack.MessageHash = primitives.NewZeroHash()
+		ack.LeaderChainID = DefID
+		ack.BalanceHash = primitives.NewZeroHash()
 
-	par := p2p.NewParcel(network, data)
-	return par
+		ack.Height = 0
+		ack.SerialHash = ack.MessageHash
+		ack.Sign(DefKey)
+
+		data, _ := ack.MarshalBinary()
+		a.AckData = data
+		par := p2p.NewParcel(network, a.AckData)
+		a.P = par
+	}
+
+	return a.P
 }
 
 func (b *BadPeer) alwaysRead() {
