@@ -49,7 +49,7 @@ func main() {
 		//192.168.1.10:8108
 		peer      = flag.String("addr", "192.168.1.10:8108", "Address to connect to")
 		n         = flag.Int("n", 100, "Number of connections per peer")
-		spam      = flag.Bool("spam", false, "Enable the spam of messages")
+		ackSpam   = flag.Bool("aspam", false, "Enable the spam of messages")
 		persecond = flag.Int("ps", 100, "Spam per second. 1000 is max, keep in mind this isn't completely accurate")
 		net       = flag.String("net", "LOCAL", "Network you are on")
 		customnet = flag.String("customnet", "", "CustomNetID")
@@ -85,7 +85,7 @@ func main() {
 			randomID = fmt.Sprintf("%x", random)
 			peers[i] = NewBadPeer(randomID, peerAddr)
 			peers[i].Stats = s
-			peers[i].StartBadPeer(*spam, *persecond)
+			peers[i].StartBadPeer(*ackSpam, *persecond)
 		}
 	}
 
@@ -120,11 +120,11 @@ func NewBadPeer(id string, addr string) *BadPeer {
 }
 
 // StartBadPeer runs
-func (b *BadPeer) StartBadPeer(spam bool, ps int) {
+func (b *BadPeer) StartBadPeer(ackSpam bool, ps int) {
 	b.maintainConnection()
 	go b.alwaysRead()
-	if spam {
-		go b.spam(ps)
+	if ackSpam {
+		go b.ackSpam(ps)
 	}
 }
 
@@ -144,7 +144,7 @@ Top:
 	b.Stats.IncConns()
 }
 
-func (b *BadPeer) spam(ps int) {
+func (b *BadPeer) ackSpam(ps int) {
 	if ps > 1000 {
 		ps = 1000
 	}
