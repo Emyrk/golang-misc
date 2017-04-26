@@ -192,8 +192,12 @@ func (a *AckMaker) makeAck(height int64) *p2p.Parcel {
 	if a.Ack == nil || a.Ack.Height < uint32(height) {
 		vmIndex := 0
 
+		h := height - 1
+		if h < 0 {
+			h = 0
+		}
 		ack := new(messages.Ack)
-		ack.DBHeight = uint32(height) - 1
+		ack.DBHeight = uint32(h)
 		ack.VMIndex = vmIndex
 		ack.Minute = byte(random.RandIntBetween(0, 9))
 		ack.Timestamp = primitives.NewTimestampNow()
