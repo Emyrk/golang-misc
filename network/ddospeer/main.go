@@ -156,7 +156,7 @@ func (b *BadPeer) spam(ps int) {
 	ticker := time.NewTicker(tickertime)
 
 	a := new(AckMaker)
-	last := time.Now()
+	last := time.Now().Add(-20 * time.Second)
 	var height int64
 	for _ = range ticker.C {
 		if time.Since(last).Seconds() > 10 {
