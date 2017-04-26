@@ -148,10 +148,12 @@ func (b *BadPeer) spam(ps int) {
 	if ps > 1000 {
 		ps = 1000
 	}
+	ps = ps * 1000
+	tickertime := time.Duration(1e12/ps) * time.Nanosecond
 	arr := strings.Split(b.Addr, ":")
 	factom.SetFactomdServer(arr[0] + ":8088")
 	enc := gob.NewEncoder(b.Connection)
-	ticker := time.NewTicker(time.Duration(1000/ps) * time.Millisecond)
+	ticker := time.NewTicker(tickertime)
 	for _ = range ticker.C {
 		h, err := factom.GetHeights()
 		if err != nil {
