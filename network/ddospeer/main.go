@@ -211,6 +211,8 @@ func (a *AckMaker) makeAck(height int64) *p2p.Parcel {
 		ack.SerialHash = ack.MessageHash
 		ack.Sign(DefKey)
 
+		a.Ack = ack
+		a.Ack.Height = uint32(height)
 		data, _ := ack.MarshalBinary()
 		a.AckData = data
 		par := p2p.NewParcel(network, a.AckData)
