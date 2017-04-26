@@ -89,9 +89,15 @@ func main() {
 		}
 	}
 
+	last := time.Now()
+	lastSent := int32(0)
 	for {
 		time.Sleep(2 * time.Second)
-		fmt.Printf("Conns: %d, Mess: %d, Dials: %d, Sent: %d\n", s.ReadConnInt(), s.ReadMessInt(), s.ReadDialsInt(), s.ReadSentInt())
+		since := time.Since(last)
+		sent := s.ReadSentInt()
+		fmt.Printf("Conns: %d, Mess: %d, Dials: %d, Sent: %d, Sent %2f/s\n", s.ReadConnInt(), s.ReadMessInt(), s.ReadDialsInt(), sent, float64(sent-lastSent)/float64(since.Seconds()))
+		lastSent = sent
+		last = time.Now()
 	}
 }
 
@@ -145,10 +151,11 @@ func (b *BadPeer) spam(ps int) {
 	arr := strings.Split(b.Addr, ":")
 	factom.SetFactomdServer(arr[0] + ":8088")
 	enc := gob.NewEncoder(b.Connection)
-	for {
+	ticker := time.NewTicker(time.Duration(1000/ps) * time.Millisecond)
+	for _ = range ticker.C {
 		h, err := factom.GetHeights()
 		if err != nil {
-			time.Sleep(100 * time.Millisecond)
+			//time.Sleep(100 * time.Millisecond)
 			continue
 		}
 		height := h.LeaderHeight
@@ -156,12 +163,11 @@ func (b *BadPeer) spam(ps int) {
 		par := makeAck(height)
 		err = enc.Encode(par)
 		if err != nil {
-			time.Sleep(100 * time.Millisecond)
+			//time.Sleep(100 * time.Millisecond)
 			continue
 		} else {
 			b.Stats.IncSent()
 		}
-		time.Sleep(time.Duration(1000/ps) * time.Millisecond)
 	}
 }
 
