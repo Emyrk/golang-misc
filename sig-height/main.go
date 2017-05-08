@@ -41,10 +41,12 @@ func verify(height uint32) {
 
 	good := 0
 	total := 0
+	pre := ""
 	for _, e := range a.GetABEntries() {
 		if e.Type() == constants.TYPE_DB_SIGNATURE {
 			dbsig := e.(*adminBlock.DBSignatureEntry)
 			if !dbsig.PrevDBSig.Verify(msg) {
+				pre := "!!"
 				//fmt.Printf("--Bad Sig --\nID: %s\nSig: %x\n", dbsig.IdentityAdminChainID.String(), dbsig.PrevDBSig.GetSigBytes())
 			} else {
 				good++
@@ -52,7 +54,7 @@ func verify(height uint32) {
 			total++
 		}
 	}
-	fmt.Printf(" >> %d/%d Good for %d.\n", good, total, height)
+	fmt.Printf("%s >> %d/%d Good for %d.\n", pre, good, total, height)
 }
 
 func getDblockByHeight(height uint32) *directoryBlock.DirectoryBlock {
