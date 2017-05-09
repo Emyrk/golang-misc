@@ -43,6 +43,7 @@ var dialer = net.Dialer{
 var conn net.Conn
 var randomID string
 var network p2p.NetworkID
+var Unique bool
 
 func main() {
 	var (
@@ -53,9 +54,11 @@ func main() {
 		persecond = flag.Int("ps", 100, "Spam per second. 1000 is max, keep in mind this isn't completely accurate")
 		net       = flag.String("net", "LOCAL", "Network you are on")
 		customnet = flag.String("customnet", "", "CustomNetID")
+		unique    = flag.Bool("u", false, "Unique messages")
 	)
 
 	flag.Parse()
+	Unique = *unique
 	peerStrings := strings.Split(*peer, " ")
 	custnetID := primitives.Sha([]byte(*customnet)).Bytes()[:4]
 
@@ -189,7 +192,7 @@ type AckMaker struct {
 }
 
 func (a *AckMaker) makeAck(height int64) *p2p.Parcel {
-	if a.Ack == nil || a.Ack.Height < uint32(height) {
+	if a.Ack == nil || a.Ack.Height < uint32(height) || Unique {
 		vmIndex := 0
 
 		h := height - 1
