@@ -139,7 +139,7 @@ func main() {
 			for _, k := range keys {
 				fa, err := factom.MakeFactoidAddress(k)
 				if err == nil {
-					fmt.Println("From Key:", fa.String())
+					fmt.Printf("From Key: %s :: %s\n", fa.String(), fa.SecString())
 				}
 
 				raw := new(Raw)
@@ -154,7 +154,7 @@ func main() {
 					sec := r.data[len(r.data)-64 : len(r.data)-32]
 					fa, err := factom.MakeFactoidAddress(sec)
 					if err == nil {
-						fmt.Println("From Value:", fa.String())
+						fmt.Printf("From Value: %s :: %s\n", fa.String(), fa.SecString())
 					}
 				}
 			}
