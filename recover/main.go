@@ -167,9 +167,9 @@ func bruteopen(filename string, name string) {
 		}
 		tot++
 		fmt.Println(fa.String(), "::", fa.SecString())
-		if tot%100 == 0 {
+		if tot%5000 == 0 {
 			s := time.Since(n).Seconds()
-			log.Printf("%d/%d addresses generated. %f/s", tot, all, 100/s)
+			log.Printf("%d/%d addresses generated. %f/s", tot, all, 5000/s)
 			n = time.Now()
 		}
 	}
