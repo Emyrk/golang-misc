@@ -8,6 +8,7 @@ import (
 	"log"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/FactomProject/bolt"
 	fw "github.com/FactomProject/factoid/wallet"
@@ -94,9 +95,11 @@ func OpenBoltDB(boltPath string) (db *boltdb.BoltDB, reterr error) {
 }
 
 func main() {
+	log.SetOutput(os.Stderr)
 	var (
 		// Optionally find files in other directory
-		dir = flag.String("dir", ".", "Path to directory")
+		dir   = flag.String("dir", ".", "Path to directory")
+		brute = flag.Bool("b", false, "Brute force file")
 	)
 
 	flag.Parse()
@@ -127,53 +130,96 @@ func main() {
 
 	// Go through files
 	for _, f := range dbfiles {
-		// openFile(path, f)
 		filename := path + f.Name()
-		db, err := OpenBoltDB(filename)
+		if *brute {
+			bruteopen(filename, f.Name())
+		} else {
+			openRawBolt(filename)
+		}
+	}
+}
+
+func bruteopen(filename string, name string) {
+	fmt.Println("Brute opening: ", filename)
+	f, err := os.OpenFile(filename, os.O_RDONLY, 0666)
+	if err != nil {
+		fmt.Printf("Error opening %s: %s\n", filename, err.Error())
+	}
+
+	data, err := ioutil.ReadAll(f)
+	if err != nil {
+		fmt.Printf("Error Reading %s: %s\n", filename, err.Error())
+	}
+
+	start := time.Now()
+	all := len(data) - 31
+	log.Printf("%d bytes to parse through, meaning %d addresses to generate", len(data), all)
+	tot := 0
+	n := time.Now()
+	for i := range data {
+		if i+32 > len(data) {
+			break
+		}
+		fa, err := factom.MakeFactoidAddress(data[i : i+32])
 		if err != nil {
-			fmt.Printf("Error with %s: %s\n", filename, err.Error())
+			fmt.Println("Cannot Make Address:", err.Error())
 			continue
 		}
-
-		fmt.Println("Successfully opened", filename)
-		buckets, err := db.ListAllBuckets()
-		if err != nil {
-			fmt.Println("Error getting buckets:", err.Error())
-			continue
+		tot++
+		fmt.Println(fa.String(), "::", fa.SecString())
+		if tot%100 == 0 {
+			s := time.Since(n).Seconds()
+			log.Printf("%d/%d addresses generated. %f/s", tot, all, 100/s)
+			n = time.Now()
 		}
+	}
+	s := time.Since(start).Seconds()
+	log.Printf("%d/%d addresses generated. Took %f seconds", tot, all, s)
+}
 
-		for _, b := range buckets {
-			keys, err := db.ListAllKeys(b)
+func openRawBolt(filename string) {
+	// openFile(path, f)
+	db, err := OpenBoltDB(filename)
+	if err != nil {
+		fmt.Printf("Error with %s: %s\n", filename, err.Error())
+		return
+	}
+
+	fmt.Println("Successfully opened", filename)
+	buckets, err := db.ListAllBuckets()
+	if err != nil {
+		fmt.Println("Error getting buckets:", err.Error())
+		return
+	}
+
+	for _, b := range buckets {
+		keys, err := db.ListAllKeys(b)
+		if err != nil {
+			fmt.Printf("Error getting keys for bucket %x :: %s\n", b, string(b))
+			return
+		}
+		for _, k := range keys {
+			fa, err := factom.MakeFactoidAddress(k)
+			if err == nil {
+				fmt.Printf("From Key: %s :: %s\n", fa.String(), fa.SecString())
+			}
+
+			raw := new(Raw)
+			rI, err := db.Get(b, k, raw)
 			if err != nil {
-				fmt.Printf("Error getting keys for bucket %x :: %s\n", b, string(b))
-				continue
+				fmt.Printf("Error getting value for key %x :: %s\n", k, string(k))
+				return
 			}
-			for _, k := range keys {
-				fa, err := factom.MakeFactoidAddress(k)
+
+			r := rI.(*Raw)
+			if len(r.data) > 32 {
+				sec := r.data[len(r.data)-64 : len(r.data)-32]
+				fa, err := factom.MakeFactoidAddress(sec)
 				if err == nil {
-					fmt.Printf("From Key: %s :: %s\n", fa.String(), fa.SecString())
-				}
-
-				raw := new(Raw)
-				rI, err := db.Get(b, k, raw)
-				if err != nil {
-					fmt.Printf("Error getting value for key %x :: %s\n", k, string(k))
-					continue
-				}
-
-				r := rI.(*Raw)
-				if len(r.data) > 32 {
-					sec := r.data[len(r.data)-64 : len(r.data)-32]
-					fa, err := factom.MakeFactoidAddress(sec)
-					if err == nil {
-						fmt.Printf("From Value: %s :: %s\n", fa.String(), fa.SecString())
-					}
+					fmt.Printf("From Value: %s :: %s\n", fa.String(), fa.SecString())
 				}
 			}
-
 		}
-
-		var _ = db
 	}
 }
 
