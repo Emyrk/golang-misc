@@ -85,6 +85,7 @@ func OpenBoltDB(boltPath string) (db *boltdb.BoltDB, reterr error) {
 			}
 			db = nil
 			reterr = err
+			return
 		}
 	}()
 
@@ -131,6 +132,7 @@ func main() {
 		db, err := OpenBoltDB(filename)
 		if err != nil {
 			fmt.Printf("Error with %s: %s\n", filename, err.Error())
+			continue
 		}
 
 		fmt.Println("Successfully opened", filename)
