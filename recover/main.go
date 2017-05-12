@@ -8,6 +8,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/FactomProject/bolt"
 	fw "github.com/FactomProject/factoid/wallet"
 	"github.com/FactomProject/factom/wallet"
 	"github.com/FactomProject/factomd/database/boltdb"
@@ -32,7 +33,7 @@ func (wew *WalletEntryWrapper) UnmarshalBinaryData(data []byte) ([]byte, error) 
 }
 
 // OpenBoltDB opens a boltDB if it exists
-func OpenBoltDB(boltPath string) (*boltdb.BoltDB, error) {
+func OpenBoltDB(boltPath string) (db *boltdb.BoltDB, reterr error) {
 	// check if the file exists or if it is a directory
 	fileInfo, err := os.Stat(boltPath)
 	if err == nil {
@@ -53,11 +54,20 @@ func OpenBoltDB(boltPath string) (*boltdb.BoltDB, error) {
 	defer func() {
 		if r := recover(); r != nil {
 			fmt.Printf("Could not use wallet file \"%s\"\n%v\n", boltPath, r)
-			os.Exit(1)
+			fmt.Println("Trying another method....")
+			tdb, err := bolt.Open(boltPath, 0600, nil)
+			if err != nil {
+				fmt.Println("Database could not be opend", err.Error())
+			} else {
+				fmt.Println("Database opened, but we will close as we cannot progress.")
+				tdb.Close()
+			}
+			db = nil
+			reterr = err
 		}
 	}()
 
-	db := boltdb.NewBoltDB(nil, boltPath)
+	db = boltdb.NewBoltDB(nil, boltPath)
 	return db, nil
 }
 
