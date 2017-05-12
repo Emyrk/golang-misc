@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/hex"
 	"flag"
 	"fmt"
 	"io/ioutil"
@@ -10,11 +11,31 @@ import (
 
 	"github.com/FactomProject/bolt"
 	fw "github.com/FactomProject/factoid/wallet"
+	"github.com/FactomProject/factom"
 	"github.com/FactomProject/factom/wallet"
 	"github.com/FactomProject/factomd/database/boltdb"
 )
 
+var _ = hex.Decode
 var _ = wallet.ApiVersion
+
+type Raw struct {
+	data []byte
+}
+
+func (r *Raw) MarshalBinary() ([]byte, error) {
+	return r.data, nil
+}
+
+func (r *Raw) UnmarshalBinary(data []byte) error {
+	r.data = data
+	return nil
+}
+
+func (r *Raw) UnmarshalBinaryData(data []byte) ([]byte, error) {
+	r.data = data
+	return nil, nil
+}
 
 type WalletEntryWrapper struct {
 	WE *fw.WalletEntry
@@ -126,21 +147,26 @@ func main() {
 				continue
 			}
 			for _, k := range keys {
-				fmt.Println(len(k))
-				we := new(WalletEntryWrapper)
-				wewI, err := db.Get(b, k, we)
+				fa, err := factom.MakeFactoidAddress(k)
+				if err == nil {
+					fmt.Printf("From Key: %s :: %s\n", fa.String(), fa.SecString())
+				}
+
+				raw := new(Raw)
+				rI, err := db.Get(b, k, raw)
 				if err != nil {
 					fmt.Printf("Error getting value for key %x :: %s\n", k, string(k))
 					continue
 				}
 
-				wew := wewI.(*WalletEntryWrapper)
-				add, err := wew.WE.GetAddress()
-				if err != nil {
-					fmt.Printf("Error printing value for key %x :: %s\n", k, string(k))
-					continue
+				r := rI.(*Raw)
+				if len(r.data) > 32 {
+					sec := r.data[len(r.data)-64 : len(r.data)-32]
+					fa, err := factom.MakeFactoidAddress(sec)
+					if err == nil {
+						fmt.Printf("From Value: %s :: %s\n", fa.String(), fa.SecString())
+					}
 				}
-				fmt.Printf("WE: %s\n", add.String())
 			}
 
 		}
