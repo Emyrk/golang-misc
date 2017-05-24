@@ -118,6 +118,7 @@ func main() {
 			_, err := makeChain()
 			sc.AddChain(1)
 			if err == nil {
+				fmt.Println(err)
 				sc.VerifyChain(1)
 			}
 		}()
@@ -125,6 +126,7 @@ func main() {
 		_, err := makeChain()
 		sc.AddChain(1)
 		if err == nil {
+			fmt.Println(err)
 			sc.VerifyChain(1)
 		}
 		// time.Sleep(10 * time.Millisecond)
