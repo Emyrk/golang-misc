@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"flag"
 	"fmt"
+	"strings"
 	"sync/atomic"
 	"time"
 
@@ -45,6 +46,8 @@ type EntryHolder struct {
 }
 
 type StatCollector struct {
+	totalTrans *int32
+
 	totalChains  *int32
 	totalEntries *int32
 
@@ -58,19 +61,26 @@ func NewStatCollector() *StatCollector {
 	s.totalEntries = new(int32)
 	s.verifyChains = new(int32)
 	s.verifyEntries = new(int32)
+	s.totalTrans = new(int32)
 
 	return s
 }
 
 func (sc *StatCollector) PrintStatCollector() {
 	tk := time.NewTicker(Each)
+	start := time.Now()
 	for _ = range tk.C {
 		tc := atomic.LoadInt32(sc.totalChains)
 		te := atomic.LoadInt32(sc.totalEntries)
 		vc := atomic.LoadInt32(sc.verifyChains)
 		ve := atomic.LoadInt32(sc.verifyEntries)
-		fmt.Printf("C: %d/%d  --  E: %d/%d\n", vc, tc, ve, te)
+		tt := atomic.LoadInt32(sc.totalTrans)
+		fmt.Printf("%f TPS |  C: %d/%d  --  E: %d/%d\n", float64(tt)/time.Since(start).Seconds(), vc, tc, ve, te)
 	}
+}
+
+func (sc *StatCollector) NewTransaction(v int32) {
+	atomic.AddInt32(sc.totalTrans, v)
 }
 
 func (sc *StatCollector) VerifyChain(v int32) {
@@ -89,16 +99,38 @@ func (sc *StatCollector) AddEntry(v int32) {
 	atomic.AddInt32(sc.totalEntries, v)
 }
 
+func cycleServer(hosts []string) {
+	factom.SetFactomdServer(hosts[0])
+	i := 0
+	max := len(hosts)
+	ticker := time.NewTicker(time.Second * 1)
+	for _ = range ticker.C {
+		if i >= max {
+			i = 0
+		}
+		factom.SetFactomdServer(hosts[i])
+		i++
+	}
+}
+
 func main() {
 	var (
-		host    = flag.String("s", "localhost:8088", "Factomd location")
-		blktime = flag.Int("blktime", 10, "Block time in second")
+		hosts       = flag.String("hosts", "localhost:8088", "Factomd location")
+		blktime     = flag.Int("blktime", 10, "Block time in second")
+		sleepAmount = flag.Int("s", 5, "Sleep duration")
 	)
 
 	flag.Parse()
+	fmt.Printf("Hosts:%s\nBlktime:%d\nSleep:%d\n", *hosts, *blktime, *sleepAmount)
+
 	BlockTime = time.Duration(*blktime) * time.Second
 
-	factom.SetFactomdServer(*host)
+	hostArr := strings.Split(*hosts, " ")
+	if len(hostArr) == 1 {
+		factom.SetFactomdServer(hostArr[0])
+	} else {
+		go cycleServer(hostArr)
+	}
 	rate, err := factom.GetRate()
 	panicerr(err)
 	Rate = rate
@@ -114,7 +146,7 @@ func main() {
 
 	for {
 		go makeRandomChain(sc)
-		time.Sleep(30 * time.Second)
+		time.Sleep(time.Duration(*sleepAmount) * time.Second)
 	}
 }
 
@@ -125,6 +157,7 @@ func makeRandomChain(sc *StatCollector) {
 		fmt.Println(err)
 		return
 	}
+	sc.NewTransaction(1)
 
 	amt := random.RandIntBetween(0, 25)
 	ents, err := addEntries(c, amt)
@@ -132,10 +165,12 @@ func makeRandomChain(sc *StatCollector) {
 		fmt.Println(err)
 		return
 	}
+	sc.NewTransaction(int32(amt))
 
 	sle := (BlockTime / 10)
 	for i := 0; i < 12; i++ {
-		fmt.Printf("[%x] %d/%d -- %fs left\n", hash, i, 12, float64(12-i)*sle.Seconds())
+		var _ = hash
+		// fmt.Printf("[%x] %d/%d -- %fs left\n", hash, i, 12, float64(12-i)*sle.Seconds())
 		time.Sleep(sle)
 	}
 	sc.AddChain(1)
