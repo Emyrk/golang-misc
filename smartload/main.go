@@ -234,6 +234,8 @@ func makeChain() (*factom.Chain, error) {
 		return nil, fmt.Errorf("Error RevealChain: %s", err.Error())
 	}
 
+	fmt.Println("factom-cli get allentries", c.ChainID)
+
 	err, stat, stat2 = waitonAck(rtxid, false)
 	if err != nil {
 		return nil, err
@@ -272,15 +274,21 @@ func makeChain() (*factom.Chain, error) {
 
 func waitonAck(txid string, com bool) (error, string, string) {
 	for {
-		s, err := factom.EntryACK(txid, "")
-		if err != nil {
-			return fmt.Errorf("Error WaitOnAck: %s", err.Error()), "", ""
-		}
 		if com {
+			s, err := factom.EntryCommitACK(txid, "")
+			if err != nil {
+				return fmt.Errorf("Error WaitOnAck: %s", err.Error()), "", ""
+			}
+
 			if (s.CommitData.Status != "Unknown") && (s.CommitData.Status != "NotConfirmed") {
 				return nil, s.CommitData.Status, s.EntryData.Status
 			}
 		} else {
+			s, err := factom.EntryACK(txid, "")
+			if err != nil {
+				return fmt.Errorf("Error WaitOnAck: %s", err.Error()), "", ""
+			}
+
 			if (s.EntryData.Status != "Unknown") && (s.EntryData.Status != "NotConfirmed") {
 				return nil, s.CommitData.Status, s.EntryData.Status
 			}
