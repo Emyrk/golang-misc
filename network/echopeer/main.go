@@ -157,6 +157,12 @@ type P2PParcel struct {
 	sent   time.Time
 }
 
+func NewP2Parcel(p p2p.Parcel) *P2PParcel{
+	pp := new(P2PParcel)
+	pp.Parcel = &p
+	return pp
+}
+
 // StartBadPeer runs
 func (b *BadPeer) StartBadPeer(replays int) {
 	b.maintainConnection()
