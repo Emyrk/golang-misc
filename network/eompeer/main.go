@@ -24,7 +24,6 @@ var dialer = net.Dialer{
 }
 
 func main() {
-
 	var (
 		//192.168.1.10:8108
 		peer      = flag.String("peers", "localhost:8110", "Address to connect to")
