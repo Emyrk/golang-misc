@@ -98,8 +98,9 @@ func (e *EchoWaterfall) Run() {
 			if !m.sent.Before(cutoff) {
 				time.Sleep(m.sent.Sub(cutoff))
 			}
-			e.B.Broadcast(m.Parcel)
+			e.B.Broadcast(m.Parcel, m.Number)
 			m.sent = time.Now()
+			m.Number++
 			if e.Next != nil {
 				e.Next.Incoming <- m
 			}
@@ -107,15 +108,19 @@ func (e *EchoWaterfall) Run() {
 	}
 }
 
-func (r *RepeatingPeer) Broadcast(m *p2p.Parcel) {
+func (r *RepeatingPeer) Broadcast(m *p2p.Parcel, number int) {
 	for _, c := range r.Connections {
 		err := c.Send(m)
-		if err != nil {
-			fmt.Println(err)
-		} else {
-			fmt.Println("Msg Sent")
-		}
+		var _ = err
+		//if err != nil {
+		//	fmt.Println(err)
+		//} else {
+		//	msg, _ := messages.UnmarshalMessage(m.Payload)
+		//	fmt.Println("Msg Sent", number, msg.GetHash().String(), msg.String())
+		//}
 	}
+	msg, _ := messages.UnmarshalMessage(m.Payload)
+	fmt.Println("Msg Sent", number, msg.GetHash().String(), msg.String())
 }
 
 type SingleConnection struct {
@@ -166,11 +171,18 @@ func (s *SingleConnection) AlwaysRead() {
 				pong.Header.Type = p2p.TypePong
 				s.Encoder.Encode(pong)
 			} else {
+
 				msg, _ := messages.UnmarshalMessage(m.Payload)
-				fmt.Println(msg)
-				if msg != nil && (msg.Type() == constants.EOM_MSG || msg.Type() == constants.DIRECTORY_BLOCK_SIGNATURE_MSG ) {
+				if msg != nil && msg.Type() == constants.MISSING_MSG {
+					continue
+				}
+
+				if msg != nil && (msg.Type() == constants.EOM_MSG ||
+					msg.Type() == constants.DIRECTORY_BLOCK_SIGNATURE_MSG ||
+						true) {
+					fmt.Println(len(s.UpChannel), msg.GetHash().String(), msg.String())
 					replay := p2p.NewParcel(network, m.Payload)
-					replay.Header.Type = m.Header.Type
+					replay.Header.Type = p2p.TypeMessage // m.Header.Type
 					s.UpChannel <- NewP2Parcel(replay)
 				}
 				//enc.Encode(replay)

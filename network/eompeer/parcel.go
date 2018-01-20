@@ -8,6 +8,7 @@ import (
 type P2PParcel struct {
 	Parcel *p2p.Parcel
 	sent   time.Time
+	Number int
 }
 
 func NewP2Parcel(p *p2p.Parcel) *P2PParcel {
