@@ -23,6 +23,7 @@ const level string = "level"
 const bolt string = "bolt"
 
 var blockamount = 10
+var blocktime = 600 // In seconds
 
 func main() {
 	var (
@@ -82,12 +83,12 @@ func count(reader Fetcher) {
 			perblockEntries += len(eb.GetEntryHashes())
 			entryCount += len(eb.GetEntryHashes())
 		}
-		fmt.Printf(" Block %d: %d Entries at %d/s\n", i, perblockEntries, perblockEntries/60)
+		fmt.Printf(" Block %d: %d Entries at %d/s\n", i, perblockEntries, perblockEntries/blocktime)
 	}
 
 	fmt.Printf("Totals -- Entries: %d\n", entryCount)
 	fmt.Printf("Per Block Average -- Entries: %d\n", entryCount/blockamount)
-	fmt.Printf("PerSecond -- Entries: %d\n", entryCount/(blockamount*60))
+	fmt.Printf("PerSecond -- Entries: %d\n", entryCount/(blockamount*blocktime))
 }
 
 type Fetcher interface {
