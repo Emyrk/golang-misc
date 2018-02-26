@@ -1,0 +1,11 @@
+package: github.com/Emyrk/golang-misc/enterrate
+import:
+- package: github.com/FactomProject/factom
+- package: github.com/FactomProject/factomd
+  subpackages:
+  - common/directoryBlock
+  - common/entryBlock
+  - common/interfaces
+  - common/primitives
+  - database/databaseOverlay
+  - database/hybridDB
