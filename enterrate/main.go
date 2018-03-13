@@ -83,12 +83,12 @@ func count(reader Fetcher) {
 			perblockEntries += len(eb.GetEntryHashes())
 			entryCount += len(eb.GetEntryHashes())
 		}
-		fmt.Printf(" Block %d: %d Entries at %d/s\n", i, perblockEntries, perblockEntries/blocktime)
+		fmt.Printf(" Block %d: %d Entries at %f/s\n", i, perblockEntries, float64(perblockEntries)/float64(blocktime))
 	}
 
 	fmt.Printf("Totals -- Entries: %d\n", entryCount)
-	fmt.Printf("Per Block Average -- Entries: %d\n", entryCount/blockamount)
-	fmt.Printf("PerSecond -- Entries: %d\n", entryCount/(blockamount*blocktime))
+	fmt.Printf("Per Block Average -- Entries: %f\n", float64(entryCount)/float64(blockamount))
+	fmt.Printf("PerSecond -- Entries: %f\n", float64(entryCount)/float64(blockamount*blocktime))
 }
 
 type Fetcher interface {
