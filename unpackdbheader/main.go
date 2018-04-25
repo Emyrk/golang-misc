@@ -6,11 +6,11 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/FactomProject/factomd/common/messages"
+	"github.com/FactomProject/factomd/common/directoryBlock"
 )
 
 func main() {
-	a := new(messages.DirectoryBlockSignature)
+	a := new(directoryBlock.DBlockHeader)
 	v, err := hex.DecodeString(os.Args[1])
 	if err != nil {
 		panic(err)
