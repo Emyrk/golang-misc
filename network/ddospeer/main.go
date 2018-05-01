@@ -13,7 +13,9 @@ import (
 	"sync/atomic"
 	"time"
 
+	ed "github.com/FactomProject/ed25519"
 	"github.com/FactomProject/factom"
+	"github.com/FactomProject/factomd/common/factoid"
 	"github.com/FactomProject/factomd/common/interfaces"
 	"github.com/FactomProject/factomd/common/messages"
 	"github.com/FactomProject/factomd/common/primitives"
@@ -77,9 +79,12 @@ func main() {
 	ErrorFile.WriteString("Error file\n")
 
 	// Key setup
-	DefKey, _ = primitives.NewPrivateKeyFromHex("4c38c72fc5cdad68f13b74674d3ffb1f3d63a112710868c9b08946553448d26d")
+	DefKey, err = primitives.NewPrivateKeyFromHex("4c38c72fc5cdad68f13b74674d3ffb1f3d63a112710868c9b08946553448d26d")
 	DefID, _ = primitives.HexToHash("38bab1455b7bd7e5efd15c53c777c79d0c988e9210f1da49a99d95b3a6417be9")
 
+	if err != nil {
+		panic(err)
+	}
 	for _, peerAddr := range peerStrings {
 		peers := make([]*BadPeer, *n)
 		for i := 0; i < len(peers); i++ {
@@ -173,6 +178,7 @@ func (b *BadPeer) ackSpam(ps int) {
 		}
 
 		par := a.makeAck(height)
+		//msgs := a.makeValidAckWithMessage(height)
 		err := enc.Encode(par)
 		if err != nil {
 			//time.Sleep(100 * time.Millisecond)
@@ -180,7 +186,33 @@ func (b *BadPeer) ackSpam(ps int) {
 		} else {
 			b.Stats.IncSent()
 		}
+
+		//err = enc.Encode(msgs[1])
+		//if err != nil {
+		//	//time.Sleep(100 * time.Millisecond)
+		//	continue
+		//} else {
+		//	b.Stats.IncSent()
+		//}
 	}
+}
+
+func (a *AckMaker) makeValidAckWithMessage(height int64) []*p2p.Parcel {
+
+	if a.Ack == nil || a.Ack.Height < uint32(height) || Unique {
+		msg, err := fctTrans(100)
+		if err != nil {
+			panic(err)
+		}
+
+		data, _ := msg.MarshalBinary()
+		par := p2p.NewParcel(network, data)
+		a.M = par
+
+		a.makeAckForMsg(height, msg)
+	}
+
+	return []*p2p.Parcel{a.P, a.M}
 }
 
 // AckMaker makes acks
@@ -189,9 +221,19 @@ type AckMaker struct {
 	AckData []byte
 
 	P *p2p.Parcel
+	M *p2p.Parcel
 }
 
 func (a *AckMaker) makeAck(height int64) *p2p.Parcel {
+	if a.Ack == nil || a.Ack.Height < uint32(height) || Unique {
+		msg := new(messages.Bounce)
+		msg.Timestamp = primitives.NewTimestampNow()
+		a.makeAckForMsg(height, msg)
+	}
+	return a.P
+}
+
+func (a *AckMaker) makeAckForMsg(height int64, msg interfaces.IMsg) *p2p.Parcel {
 	if a.Ack == nil || a.Ack.Height < uint32(height) || Unique {
 		vmIndex := 0
 
@@ -212,10 +254,11 @@ func (a *AckMaker) makeAck(height int64) *p2p.Parcel {
 
 		ack.Height = 0
 		ack.SerialHash = ack.MessageHash
-		ack.Sign(DefKey)
 
 		a.Ack = ack
-		a.Ack.Height = uint32(height)
+		a.Ack.Height = 200
+		a.Ack.DBHeight = uint32(height)
+		ack.Sign(DefKey)
 		data, _ := ack.MarshalBinary()
 		a.AckData = data
 		par := p2p.NewParcel(network, a.AckData)
@@ -253,6 +296,51 @@ func (b *BadPeer) alwaysRead() {
 		}
 		//fmt.Print("\nMessage from server: " + m.String())
 	}
+}
+
+func fctTrans(amt uint64) (interfaces.IMsg, error) {
+	inSec, _ := primitives.HexToHash("FB3B471B1DCDADFEB856BD0B02D8BF49ACE0EDD372A3D9F2A95B78EC12A324D6")
+	outEC, _ := primitives.HexToHash("c23ae8eec2beb181a0da926bd2344e988149fbe839fbc7489f2096e7d6110243")
+	inHash, _ := primitives.HexToHash("646F3E8750C550E4582ECA5047546FFEF89C13A175985E320232BACAC81CC428")
+	var sec [64]byte
+	copy(sec[:32], inSec.Bytes())
+
+	pub := ed.GetPublicKey(&sec)
+	//inRcd := shad(inPub.Bytes())
+
+	rcd := factoid.NewRCD_1(pub[:])
+	inAdd := factoid.NewAddress(inHash.Bytes())
+	outAdd := factoid.NewAddress(outEC.Bytes())
+
+	trans := new(factoid.Transaction)
+	trans.AddInput(inAdd, amt)
+	trans.AddECOutput(outAdd, amt)
+
+	trans.AddRCD(rcd)
+	trans.AddAuthorization(rcd)
+	trans.SetTimestamp(primitives.NewTimestampNow())
+
+	fee, err := trans.CalculateFee(4000)
+	if err != nil {
+		return nil, err
+	}
+	input, err := trans.GetInput(0)
+	if err != nil {
+		return nil, err
+	}
+	input.SetAmount(amt + fee)
+
+	dataSig, err := trans.MarshalBinarySig()
+	if err != nil {
+		return nil, err
+	}
+	sig := factoid.NewSingleSignatureBlock(inSec.Bytes(), dataSig)
+	trans.SetSignatureBlock(0, sig)
+
+	msg := new(messages.FactoidTransaction)
+	msg.Transaction = trans
+
+	return msg, nil
 }
 
 // StatMaintainer maintains some stat
