@@ -37,6 +37,8 @@ func main() {
 		peer      = flag.String("addr", "127.0.0.1:8110", "Address to connect to")
 		net       = flag.String("net", "LOCAL", "Network you are on")
 		customnet = flag.String("customnet", "", "CustomNetID")
+		start     = flag.Int("start", 0, "DBState start")
+		stop      = flag.Int("stop", 0, "DBState start")
 	)
 
 	flag.Parse()
@@ -67,7 +69,7 @@ func main() {
 
 	time.Sleep(2 * time.Second)
 	fmt.Println("Sending missing dbstate")
-	msg := NewMissingDBState(64221, 64224)
+	msg := NewMissingDBState(uint32(*start), uint32(*stop))
 	payload, err := msg.MarshalBinary()
 	if err != nil {
 		log.Error(err)
@@ -184,7 +186,8 @@ func (e *Peer) catch(parcel *P2PParcel) {
 		data, _ := msg.MarshalBinary()
 		response := p2p.NewParcel(network, data)
 		response.Header.Type = p2p.TypeMessagePart
-		p2.sendParcel(response)
+		//p2.sendParcel(response)
+		var _ = response
 	} else {
 		fmt.Println(msg)
 	}
