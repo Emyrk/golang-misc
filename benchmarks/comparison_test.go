@@ -1,5 +1,7 @@
 package benchmarks_test
 
+// go test comparison_test.go -bench=.
+
 import (
 	"testing"
 )
