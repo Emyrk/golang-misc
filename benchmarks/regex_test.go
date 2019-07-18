@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/pegnet/pegnet/support"
+	"github.com/Emyrk/golang-misc/util"
 )
 
 var haystack string
@@ -18,7 +18,7 @@ var realisticHaystackBytes = []byte(realisticHaystackString)
 var realisticNeedle = "455b7b"
 
 func init() {
-	haystackBytes = support.RandomByteSliceOfLen(50)
+	haystackBytes = util.RandomByteSliceOfLen(50)
 	haystack = fmt.Sprintf("%x", haystackBytes)
 
 	needle = haystack[80:86]
