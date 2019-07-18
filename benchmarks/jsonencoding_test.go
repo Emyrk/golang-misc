@@ -13,10 +13,10 @@ import (
 	"testing"
 	"time"
 
+	"golang.org/x/time/rate"
+
 	"github.com/gonum/floats"
 	"github.com/struCoder/pidusage"
-
-	"golang.org/x/time/rate"
 
 	"github.com/FactomProject/factomd/common/entryBlock"
 	"github.com/FactomProject/factomd/common/primitives"
@@ -70,23 +70,27 @@ func TestCPUProfile(t *testing.T) {
 
 	// Do a throughput of X/min
 	x := 5000
+	RunMode := 1
 	rateLimiter := rate.NewLimiter(rate.Limit(x), 10)
 	ctx := context.Background()
 	c := 0
-
-	RunMode := 3
 
 	switch RunMode {
 	case 0:
 		fmt.Printf("Running the BusyLoop at %d entries per second\n", x)
 		goto BusyLoop
 	case 1:
+		x = 1500
+		rateLimiter = rate.NewLimiter(rate.Limit(x), 10)
+		fmt.Printf("Running the BusyLoop at %d entries per second\n", x)
+		goto BusyLoop
+	case 3:
 		fmt.Printf("Running the TightLoop at unlimited entries per second\n")
 		goto TightLoop
-	case 2:
+	case 4:
 		fmt.Printf("Running the CPUHog in a tight for loop\n")
 		goto CPUHog
-	case 3:
+	case 5:
 		fmt.Printf("Running Nada to get a control\n")
 		goto Nada
 	}
