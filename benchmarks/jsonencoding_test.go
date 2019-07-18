@@ -8,10 +8,13 @@ import (
 	"net/http"
 	"net/http/pprof"
 	_ "net/http/pprof"
+	"os"
+	"runtime"
 	"testing"
 	"time"
 
 	"github.com/gonum/floats"
+	"github.com/struCoder/pidusage"
 
 	"golang.org/x/time/rate"
 
@@ -30,7 +33,7 @@ const (
 )
 
 func TestCPUProfile(t *testing.T) {
-	//runtime.GOMAXPROCS(1)
+	runtime.GOMAXPROCS(1)
 	marshalled := 0
 	quit := make(chan int)
 	go StartProfiler(16060)
@@ -181,30 +184,21 @@ func ReportCPUUtilization(prior, current *linuxproc.Stat, d time.Duration) {
 
 	Averages["user"] = append(Averages["user"], uAvg)
 	Averages["sys"] = append(Averages["sys"], sAvg)
+
+	sysInfo, err := pidusage.GetStat(os.Getpid())
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("PidUsage: %.2f\n", sysInfo.CPU)
+	Averages["pid"] = append(Averages["pid"], sysInfo.CPU)
 }
 
 func GetStat() *linuxproc.Stat {
-	stat, err := linuxproc.ReadStat("/proc/stat")
+	stat, err := linuxproc.ReadStat(fmt.Sprintf("/proc/stat"))
 	if err != nil {
 		panic("stat read fail")
 	}
 	return stat
-}
-
-func ReportTimeTaken(t *testing.T) {
-	stat, err := linuxproc.ReadStat("/proc/stat")
-	if err != nil {
-		t.Fatal("stat read fail")
-	}
-
-	for i, s := range stat.CPUStats {
-		fmt.Printf("[%d] User %d, System %d\n", i, s.User, s.System)
-		// s.User
-		// s.Nice
-		// s.System
-		// s.Idle
-		// s.IOWait
-	}
 }
 
 func BenchmarkEncodeEntryBinary(b *testing.B) {
