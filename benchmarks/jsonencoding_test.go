@@ -32,6 +32,8 @@ const (
 	Mb   = 2 ^ 10*Kb
 )
 
+// go test -run TestCPUProfile
+
 func TestCPUProfile(t *testing.T) {
 	runtime.GOMAXPROCS(1)
 	marshalled := 0
@@ -70,22 +72,36 @@ func TestCPUProfile(t *testing.T) {
 
 	// Do a throughput of X/min
 	x := 5000
-	RunMode := 1
+	RunMode := 7
 	rateLimiter := rate.NewLimiter(rate.Limit(x), 10)
 	ctx := context.Background()
 	c := 0
 
+	jsonEncode := func(e *entryBlock.Entry) ([]byte, error) {
+		return json.Marshal(e)
+	}
+	marshalEncode := func(e *entryBlock.Entry) ([]byte, error) {
+		return e.MarshalBinary()
+	}
+
+	encode := jsonEncode
+
 	switch RunMode {
 	case 0:
-		fmt.Printf("Running the BusyLoop at %d entries per second\n", x)
+		fmt.Printf("Running the BusyLoop at %d entries per second with JSON encode\n", x)
 		goto BusyLoop
 	case 1:
 		x = 1500
 		rateLimiter = rate.NewLimiter(rate.Limit(x), 10)
-		fmt.Printf("Running the BusyLoop at %d entries per second\n", x)
+		fmt.Printf("Running the BusyLoop at %d entries per second with JSON encode\n", x)
+		goto BusyLoop
+	case 2:
+		x = 500
+		rateLimiter = rate.NewLimiter(rate.Limit(x), 10)
+		fmt.Printf("Running the BusyLoop at %d entries per second with JSON encode\n", x)
 		goto BusyLoop
 	case 3:
-		fmt.Printf("Running the TightLoop at unlimited entries per second\n")
+		fmt.Printf("Running the TightLoop at unlimited entries per second with JSON encode\n")
 		goto TightLoop
 	case 4:
 		fmt.Printf("Running the CPUHog in a tight for loop\n")
@@ -93,6 +109,16 @@ func TestCPUProfile(t *testing.T) {
 	case 5:
 		fmt.Printf("Running Nada to get a control\n")
 		goto Nada
+	case 6:
+		encode = marshalEncode
+		fmt.Printf("Running the TightLoop at unlimited entries per second with Marshal encode\n")
+		goto TightLoop
+	case 7:
+		x = 1500
+		encode = marshalEncode
+		rateLimiter = rate.NewLimiter(rate.Limit(x), 10)
+		fmt.Printf("Running the BusyLoop at %d entries per second with Marshal Encode\n", x)
+		goto BusyLoop
 	}
 
 BusyLoop:
@@ -103,7 +129,7 @@ BusyLoop:
 			panic(err)
 		}
 		for i := 0; i < 10; i++ {
-			data, err := json.Marshal(ents[c%len(ents)])
+			data, err := encode(ents[c%len(ents)])
 			if err != nil {
 				panic(err)
 			}
@@ -123,7 +149,7 @@ BusyLoop:
 
 TightLoop:
 	for {
-		data, err := json.Marshal(ents[c%len(ents)])
+		data, err := encode(ents[c%len(ents)])
 		if err != nil {
 			panic(err)
 		}

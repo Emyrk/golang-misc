@@ -1,0 +1,228 @@
+Running the BusyLoop at 1500 entries per second with Marshal Encode
+Elapsed 1.000063213s. Marshaled 1500 entries. Total 1500, Avg 1499.91/s
+	[1] User 15%, System 8, Nice 0
+	[2] User 21%, System 2, Nice 0
+	[3] User 15%, System 4, Nice 0
+	[4] User 42%, System 21, Nice 0
+	[5] User 18%, System 5, Nice 0
+	[6] User 15%, System 4, Nice 0
+	[7] User 43%, System 17, Nice 0
+	[8] User 14%, System 4, Nice 0
+Average of User 22.88%, System 8.12%
+PidUsage: 2.97
+Elapsed 2.000116642s. Marshaled 1490 entries. Total 2990, Avg 1494.91/s
+	[1] User 38%, System 16, Nice 0
+	[2] User 15%, System 1, Nice 0
+	[3] User 18%, System 1, Nice 0
+	[4] User 28%, System 11, Nice 0
+	[5] User 14%, System 1, Nice 0
+	[6] User 9%, System 1, Nice 0
+	[7] User 8%, System 1, Nice 0
+	[8] User 12%, System 1, Nice 0
+Average of User 17.75%, System 4.12%
+PidUsage: 4.00
+Elapsed 3.000108571s. Marshaled 1490 entries. Total 4480, Avg 1493.28/s
+	[1] User 20%, System 3, Nice 0
+	[2] User 25%, System 1, Nice 0
+	[3] User 20%, System 1, Nice 0
+	[4] User 24%, System 2, Nice 0
+	[5] User 17%, System 1, Nice 0
+	[6] User 26%, System 2, Nice 0
+	[7] User 27%, System 2, Nice 0
+	[8] User 24%, System 2, Nice 0
+Average of User 22.88%, System 1.75%
+PidUsage: 4.00
+Elapsed 4.000098549s. Marshaled 1500 entries. Total 5980, Avg 1494.96/s
+	[1] User 11%, System 2, Nice 0
+	[2] User 13%, System 1, Nice 0
+	[3] User 24%, System 2, Nice 0
+	[4] User 8%, System 1, Nice 0
+	[5] User 5%, System 0, Nice 0
+	[6] User 10%, System 1, Nice 0
+	[7] User 15%, System 1, Nice 0
+	[8] User 13%, System 5, Nice 0
+Average of User 12.38%, System 1.62%
+PidUsage: 5.00
+Elapsed 5.000046455s. Marshaled 1500 entries. Total 7480, Avg 1495.99/s
+	[1] User 16%, System 1, Nice 0
+	[2] User 20%, System 4, Nice 0
+	[3] User 19%, System 5, Nice 0
+	[4] User 11%, System 6, Nice 0
+	[5] User 14%, System 6, Nice 0
+	[6] User 28%, System 7, Nice 0
+	[7] User 15%, System 3, Nice 0
+	[8] User 25%, System 3, Nice 0
+Average of User 18.50%, System 4.38%
+PidUsage: 4.00
+Elapsed 6.000081585s. Marshaled 1500 entries. Total 8980, Avg 1496.65/s
+	[1] User 20%, System 3, Nice 0
+	[2] User 8%, System 3, Nice 0
+	[3] User 7%, System 2, Nice 0
+	[4] User 3%, System 3, Nice 0
+	[5] User 20%, System 3, Nice 0
+	[6] User 5%, System 3, Nice 0
+	[7] User 3%, System 1, Nice 0
+	[8] User 5%, System 1, Nice 0
+Average of User 8.88%, System 2.38%
+PidUsage: 4.00
+Elapsed 7.000136388s. Marshaled 1500 entries. Total 10480, Avg 1497.11/s
+	[1] User 5%, System 1, Nice 0
+	[2] User 10%, System 2, Nice 0
+	[3] User 11%, System 2, Nice 0
+	[4] User 17%, System 7, Nice 0
+	[5] User 18%, System 2, Nice 0
+	[6] User 5%, System 1, Nice 0
+	[7] User 5%, System 2, Nice 0
+	[8] User 12%, System 2, Nice 0
+Average of User 10.38%, System 2.38%
+PidUsage: 6.00
+Elapsed 8.000043225s. Marshaled 1500 entries. Total 11980, Avg 1497.49/s
+	[1] User 16%, System 4, Nice 0
+	[2] User 18%, System 6, Nice 0
+	[3] User 21%, System 5, Nice 0
+	[4] User 16%, System 4, Nice 0
+	[5] User 21%, System 5, Nice 0
+	[6] User 14%, System 5, Nice 0
+	[7] User 39%, System 8, Nice 0
+	[8] User 23%, System 6, Nice 0
+Average of User 21.00%, System 5.38%
+PidUsage: 3.00
+Elapsed 9.000077359s. Marshaled 1500 entries. Total 13480, Avg 1497.76/s
+	[1] User 10%, System 5, Nice 0
+	[2] User 17%, System 2, Nice 0
+	[3] User 21%, System 6, Nice 0
+	[4] User 20%, System 3, Nice 0
+	[5] User 22%, System 3, Nice 0
+	[6] User 29%, System 5, Nice 0
+	[7] User 16%, System 2, Nice 0
+	[8] User 22%, System 2, Nice 0
+Average of User 19.62%, System 3.50%
+PidUsage: 4.00
+Elapsed 10.00006869s. Marshaled 1500 entries. Total 14980, Avg 1497.99/s
+	[1] User 12%, System 6, Nice 0
+	[2] User 22%, System 5, Nice 0
+	[3] User 17%, System 8, Nice 0
+	[4] User 25%, System 3, Nice 0
+	[5] User 16%, System 5, Nice 0
+	[6] User 51%, System 11, Nice 0
+	[7] User 14%, System 4, Nice 0
+	[8] User 20%, System 6, Nice 0
+Average of User 22.12%, System 6.00%
+PidUsage: 3.00
+Elapsed 11.000075746s. Marshaled 1500 entries. Total 16480, Avg 1498.17/s
+	[1] User 20%, System 3, Nice 0
+	[2] User 9%, System 4, Nice 0
+	[3] User 14%, System 6, Nice 0
+	[4] User 24%, System 6, Nice 0
+	[5] User 23%, System 4, Nice 0
+	[6] User 16%, System 3, Nice 0
+	[7] User 8%, System 2, Nice 0
+	[8] User 20%, System 3, Nice 0
+Average of User 16.75%, System 3.88%
+PidUsage: 5.00
+Elapsed 12.000113759s. Marshaled 1500 entries. Total 17980, Avg 1498.32/s
+	[1] User 9%, System 15, Nice 0
+	[2] User 15%, System 2, Nice 0
+	[3] User 13%, System 4, Nice 0
+	[4] User 10%, System 2, Nice 1
+	[5] User 10%, System 5, Nice 0
+	[6] User 13%, System 4, Nice 0
+	[7] User 22%, System 4, Nice 0
+	[8] User 12%, System 2, Nice 1
+Average of User 13.00%, System 4.75%
+PidUsage: 4.00
+Elapsed 13.000099413s. Marshaled 1500 entries. Total 19480, Avg 1498.45/s
+	[1] User 15%, System 1, Nice 0
+	[2] User 15%, System 6, Nice 0
+	[3] User 5%, System 3, Nice 0
+	[4] User 6%, System 1, Nice 0
+	[5] User 14%, System 4, Nice 0
+	[6] User 4%, System 4, Nice 0
+	[7] User 11%, System 1, Nice 0
+	[8] User 25%, System 2, Nice 0
+Average of User 11.88%, System 2.75%
+PidUsage: 5.00
+Elapsed 14.000055942s. Marshaled 1500 entries. Total 20980, Avg 1498.57/s
+	[1] User 14%, System 3, Nice 0
+	[2] User 30%, System 3, Nice 0
+	[3] User 14%, System 1, Nice 0
+	[4] User 10%, System 4, Nice 0
+	[5] User 18%, System 2, Nice 0
+	[6] User 17%, System 3, Nice 0
+	[7] User 17%, System 6, Nice 0
+	[8] User 17%, System 4, Nice 0
+Average of User 17.12%, System 3.25%
+PidUsage: 5.00
+Elapsed 15.000057807s. Marshaled 1500 entries. Total 22480, Avg 1498.66/s
+	[1] User 12%, System 2, Nice 0
+	[2] User 13%, System 2, Nice 0
+	[3] User 6%, System 1, Nice 0
+	[4] User 10%, System 1, Nice 0
+	[5] User 10%, System 2, Nice 0
+	[6] User 5%, System 3, Nice 0
+	[7] User 15%, System 2, Nice 0
+	[8] User 25%, System 2, Nice 0
+Average of User 12.00%, System 1.88%
+PidUsage: 4.00
+Elapsed 16.000077743s. Marshaled 1500 entries. Total 23980, Avg 1498.74/s
+	[1] User 21%, System 1, Nice 0
+	[2] User 16%, System 4, Nice 0
+	[3] User 6%, System 3, Nice 0
+	[4] User 14%, System 0, Nice 0
+	[5] User 9%, System 3, Nice 0
+	[6] User 11%, System 1, Nice 0
+	[7] User 9%, System 1, Nice 0
+	[8] User 13%, System 3, Nice 0
+Average of User 12.38%, System 2.00%
+PidUsage: 5.00
+Elapsed 17.000108084s. Marshaled 1500 entries. Total 25480, Avg 1498.81/s
+	[1] User 15%, System 2, Nice 0
+	[2] User 12%, System 3, Nice 0
+	[3] User 10%, System 2, Nice 0
+	[4] User 13%, System 2, Nice 0
+	[5] User 11%, System 4, Nice 0
+	[6] User 10%, System 3, Nice 0
+	[7] User 17%, System 1, Nice 0
+	[8] User 16%, System 8, Nice 0
+Average of User 13.00%, System 3.12%
+PidUsage: 5.00
+Elapsed 18.000107693s. Marshaled 1500 entries. Total 26980, Avg 1498.88/s
+	[1] User 17%, System 3, Nice 0
+	[2] User 10%, System 3, Nice 0
+	[3] User 13%, System 4, Nice 0
+	[4] User 9%, System 2, Nice 0
+	[5] User 10%, System 2, Nice 0
+	[6] User 29%, System 2, Nice 0
+	[7] User 14%, System 2, Nice 0
+	[8] User 11%, System 1, Nice 0
+Average of User 14.12%, System 2.38%
+PidUsage: 7.00
+Elapsed 19.00007312s. Marshaled 1500 entries. Total 28480, Avg 1498.94/s
+	[1] User 11%, System 1, Nice 0
+	[2] User 13%, System 4, Nice 0
+	[3] User 10%, System 6, Nice 0
+	[4] User 15%, System 1, Nice 0
+	[5] User 14%, System 1, Nice 0
+	[6] User 17%, System 1, Nice 0
+	[7] User 12%, System 1, Nice 0
+	[8] User 16%, System 4, Nice 0
+Average of User 13.50%, System 2.38%
+PidUsage: 4.00
+Elapsed 20.000085216s. Marshaled 1500 entries. Total 29980, Avg 1498.99/s
+	[1] User 11%, System 2, Nice 0
+	[2] User 22%, System 3, Nice 0
+	[3] User 10%, System 2, Nice 0
+	[4] User 11%, System 3, Nice 0
+	[5] User 20%, System 4, Nice 0
+	[6] User 11%, System 3, Nice 0
+	[7] User 12%, System 1, Nice 0
+	[8] User 7%, System 1, Nice 0
+Average of User 13.00%, System 2.38%
+PidUsage: 5.00
+
+Over the Entire Run:
+	user: 15.66%
+	sys: 3.42%
+	pid: 4.45%
+PASS
+ok  	github.com/Emyrk/golang-misc/benchmarks	20.020s
