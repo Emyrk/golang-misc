@@ -1,12 +1,11 @@
-package state_test
+package benchmarks_test
 
 import (
 	"runtime"
 	"testing"
 	"time"
 
-	"github.com/FactomProject/factomd/state"
-
+	state "github.com/Emyrk/golang-misc/benchmarks"
 	"github.com/FactomProject/factomd/common/primitives/random"
 )
 
