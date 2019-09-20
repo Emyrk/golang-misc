@@ -5,6 +5,8 @@ import (
 	"sync"
 )
 
+var infLoop int64
+
 // BalanceMap enables CRUD of balances in a threadsafe manner.
 type BalanceMap struct {
 	balances map[[32]byte]int64
@@ -125,6 +127,7 @@ func (bm *BalanceMap) GetBalanceSharedChanBackQuery(addr [32]byte) int64 {
 	bal := <-q.ret  // Wait for the response
 	bm.chanPool <- q.ret
 
+	infLoop = bal
 	return bal
 }
 
