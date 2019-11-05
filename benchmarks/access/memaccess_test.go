@@ -9,7 +9,7 @@ import (
 var RandomSlice []byte
 
 func BenchmarkMemoryAccess(b *testing.B) {
-	RandomSlice = make([]byte, 1024*1024)
+	RandomSlice = make([]byte, 1024*1024*1024)
 	crand.Read(RandomSlice)
 
 	b.Run("Sequential", benchmarkSequentialAccess)

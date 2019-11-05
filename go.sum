@@ -24,6 +24,8 @@ github.com/FactomProject/factom v0.0.0-20190712163801-e7717c4ab072 h1:xp/3mIsJkB
 github.com/FactomProject/factom v0.0.0-20190712163801-e7717c4ab072/go.mod h1:V1V8mWqOI72JBpGj/aPQZEmhDepdykxyhVRH5GxbP4E=
 github.com/FactomProject/factomd v6.1.1-rc1.0.20190726144038-5f0102827b86+incompatible h1:EVkDRbZYr+qRy5iDDa506l43QfnwBjZMabwrgCA+KdA=
 github.com/FactomProject/factomd v6.1.1-rc1.0.20190726144038-5f0102827b86+incompatible/go.mod h1:zeNvpIESaAp0bQSQ7U0c9tWzsklqMd5vGHLGCe3Bs3M=
+github.com/FactomProject/factomd v6.4.3+incompatible h1:MmQiJK00pwFG9tmlTMiacIeAo27R2KyUOIJ/rZim5hI=
+github.com/FactomProject/factomd v6.4.3+incompatible/go.mod h1:zeNvpIESaAp0bQSQ7U0c9tWzsklqMd5vGHLGCe3Bs3M=
 github.com/FactomProject/fastsha256 v0.2.1 h1:ICfr2Lw5Ucy785GfJSjLLG9X1mZA6dsy/xgARlZ+brs=
 github.com/FactomProject/fastsha256 v0.2.1/go.mod h1:/nQG+MXzxlaSxnkToKarNFTq1k0tbtSx5R82M00kC4k=
 github.com/FactomProject/fsnotify v0.9.0 h1:D7P7JyVP/CHGI9dPkTdKcgSoyk8uayHq/5rZYr+t+l4=
@@ -100,6 +102,8 @@ github.com/gonum/internal v0.0.0-20181124074243-f884aa714029 h1:8jtTdc+Nfj9AR+0s
 github.com/gonum/internal v0.0.0-20181124074243-f884aa714029/go.mod h1:Pu4dmpkhSyOzRwuXkOgAvijx4o+4YMUJJo9OvPYMkks=
 github.com/google/go-cmp v0.3.0/go.mod h1:8QqcDgzrUqlUb/G2PQTWiueGozuR1884gddMywk6iLU=
 github.com/google/gofuzz v1.0.0/go.mod h1:dBl0BpW6vV/+mYPU4Po3pmUjxk6FQPldtuIdl/M65Eg=
+github.com/gorilla/mux v1.7.3 h1:gnP5JzjVOuiZD07fKKToCAOjS0yOpj/qPETTXCCS6hw=
+github.com/gorilla/mux v1.7.3/go.mod h1:1lud6UwP+6orDFRuTfBEV8e9/aOM/c4fVVCaMa2zaAs=
 github.com/hashicorp/go-hclog v0.0.0-20180709165350-ff2cf002a8dd h1:rNuUHR+CvK1IS89MMtcF0EpcVMZtjKfPRp4MEmt/aTs=
 github.com/hashicorp/go-hclog v0.0.0-20180709165350-ff2cf002a8dd/go.mod h1:9bjs9uLqI8l75knNv3lV1kA55veR+WUPSiKIWcQHudI=
 github.com/hashicorp/go-plugin v1.0.1 h1:4OtAfUGbnKC6yS48p0CtMX2oFYtzFZVv6rok3cRWgnE=
@@ -170,6 +174,8 @@ github.com/prometheus/procfs v0.0.0-20181005140218-185b4288413d/go.mod h1:c3At6R
 github.com/prometheus/procfs v0.0.2/go.mod h1:TjEm7ze935MbeOT/UhFTIMYKhuLP4wbCsTZCD3I8kEA=
 github.com/prometheus/procfs v0.0.3 h1:CTwfnzjQ+8dS6MhHHu4YswVAD99sL2wjPqP+VkURmKE=
 github.com/prometheus/procfs v0.0.3/go.mod h1:4A/X28fw3Fc593LaREMrKMqOKvUAntwMDaekg4FpcdQ=
+github.com/rs/cors v1.7.0 h1:+88SsELBHx5r+hZ8TCkggzSstaWNbDvThkVK8H6f9ik=
+github.com/rs/cors v1.7.0/go.mod h1:gFx+x8UowdsKA9AchylcLynDq+nNFfI8FkUZdN/jGCU=
 github.com/russross/blackfriday v1.5.2/go.mod h1:JO/DiYxRf+HjHt06OyowR9PTA263kcR/rfWxYHBV53g=
 github.com/sirupsen/logrus v1.2.0/go.mod h1:LxeOpSwHxABJmUn/MG1IvRgCAasNZTLOkJPxbbu5VWo=
 github.com/sirupsen/logrus v1.4.2 h1:SPIRibHv4MatM3XXNO2BJeFLZwZ2LvZgfQ5+UNI2im4=

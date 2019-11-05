@@ -13,7 +13,7 @@ require (
 	github.com/FactomProject/ed25519 v0.0.0-20150814230546-38002c4fe7b6
 	github.com/FactomProject/factoid v0.3.4
 	github.com/FactomProject/factom v0.0.0-20190712163801-e7717c4ab072
-	github.com/FactomProject/factomd v6.1.1-rc1.0.20190726144038-5f0102827b86+incompatible
+	github.com/FactomProject/factomd v6.4.3+incompatible
 	github.com/FactomProject/fastsha256 v0.2.1 // indirect
 	github.com/FactomProject/fsnotify v0.9.0 // indirect
 	github.com/FactomProject/go-bip32 v0.3.5 // indirect
@@ -36,6 +36,7 @@ require (
 	github.com/dustin/go-humanize v1.0.0
 	github.com/gonum/floats v0.0.0-20181209220543-c233463c7e82 // indirect
 	github.com/gonum/internal v0.0.0-20181124074243-f884aa714029 // indirect
+	github.com/gorilla/mux v1.7.3 // indirect
 	github.com/hashicorp/go-plugin v1.0.1 // indirect
 	github.com/howeyc/fsnotify v0.9.0 // indirect
 	github.com/kr/pretty v0.1.0 // indirect
@@ -45,6 +46,7 @@ require (
 	github.com/philhofer/fwd v1.0.0 // indirect
 	github.com/pkg/profile v1.3.0
 	github.com/prometheus/client_golang v1.1.0
+	github.com/rs/cors v1.7.0 // indirect
 	github.com/sirupsen/logrus v1.4.2
 	github.com/spf13/cobra v0.0.5
 	github.com/struCoder/pidusage v0.1.2 // indirect
