@@ -31,26 +31,27 @@ require (
 	github.com/bmizerany/assert v0.0.0-20160611221934-b7ed37b82869 // indirect
 	github.com/boltdb/bolt v1.3.1 // indirect
 	github.com/btcsuitereleases/btcutil v0.0.0-20150612230727-f2b1058a8255 // indirect
-	github.com/c9s/goprocinfo v0.0.0-20190309065803-0b2ad9ac246b
+	github.com/c9s/goprocinfo v0.0.0-20190309065803-0b2ad9ac246b // indirect
 	github.com/cmars/basen v0.0.0-20150613233007-fe3947df716e // indirect
 	github.com/dustin/go-humanize v1.0.0
-	github.com/gonum/floats v0.0.0-20181209220543-c233463c7e82
+	github.com/gonum/floats v0.0.0-20181209220543-c233463c7e82 // indirect
 	github.com/gonum/internal v0.0.0-20181124074243-f884aa714029 // indirect
 	github.com/hashicorp/go-plugin v1.0.1 // indirect
 	github.com/howeyc/fsnotify v0.9.0 // indirect
 	github.com/kr/pretty v0.1.0 // indirect
 	github.com/onsi/ginkgo v1.10.1 // indirect
 	github.com/onsi/gomega v1.7.0 // indirect
-	github.com/pegnet/LXRHash v0.0.0-20191028162532-138fe8d191a2 // indirect
+	github.com/pegnet/LXRHash v0.0.0-20191028162532-138fe8d191a2
 	github.com/philhofer/fwd v1.0.0 // indirect
 	github.com/pkg/profile v1.3.0
 	github.com/prometheus/client_golang v1.1.0
 	github.com/sirupsen/logrus v1.4.2
 	github.com/spf13/cobra v0.0.5
-	github.com/struCoder/pidusage v0.1.2
+	github.com/struCoder/pidusage v0.1.2 // indirect
 	github.com/tinylib/msgp v1.1.0
 	github.com/weaveworks/mesh v0.0.0-20190731104741-b7aea39ecc40
-	golang.org/x/time v0.0.0-20190308202827-9d24e82272b4
+	golang.org/x/time v0.0.0-20190308202827-9d24e82272b4 // indirect
 	gopkg.in/gcfg.v1 v1.2.3 // indirect
 	gopkg.in/warnings.v0 v0.1.2 // indirect
+	launchpad.net/gocheck v0.0.0-20140225173054-000000000087 // indirect
 )
