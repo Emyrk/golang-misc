@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"net/http"
 	"sync"
-	"time"
 
 	"golang.org/x/net/html"
 )
@@ -147,7 +146,7 @@ func Crawl(url string, depth int) []string {
 
 	results.WriteToSlice(output)
 	close(results.err)
-	t := time.NewTimer()
+	// t := time.NewTimer()
 
 	return *output
 }
