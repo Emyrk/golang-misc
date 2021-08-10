@@ -1,0 +1,49 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <title>Cookies Sniffer</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+
+<body style="text-align:center;" onload="sniff()">
+<h1 style="color: green">
+    Stealing Cookies
+</h1>
+
+<p id="GFG_UP" style="font-size: 20px; font-weight: bold;"></p>
+
+<button onclick="sniff()">
+    Sniff Again
+</button>
+
+<p id="unprotected" style="color:green;
+        font-size: 26px; font-weight: bold;">
+</p>
+
+<script>
+    var el_up = document.getElementById("GFG_UP");
+    var cookies = document.getElementById("unprotected");
+    el_up.innerHTML = "Click on the button to "
+        + "get all accessible cookies.";
+
+    function getCookies() {
+        const urlSearchParams = new URLSearchParams(window.location.search);
+        const params = Object.fromEntries(urlSearchParams.entries());
+
+        const arr = Object.entries(params);
+        var ret = '';
+        for (var i = 1; i <= arr.length; i++) {
+            ret += i + ' - ' + arr[i - 1][0] + " = " + arr[i - 1][1] + "<br>";
+        }
+
+        return ret;
+    }
+
+    function sniff() {
+        cookies.innerHTML = getCookies();
+    }
+</script>
+</body>
+
+</html>
