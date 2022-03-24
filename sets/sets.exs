@@ -1,4 +1,7 @@
-levels = ["site", "org", "user", "*", "org:mem", "org:non-mem"]
+# cat sets.exs - | iex
+# elixir sets.exs
+
+levels = ["site", "org", "user", "*", "org:mem"]  # "org:non-mem"
 resources = ["resource", "*", "other"]
 ids = ["rid", "other", "*"]
 actions = ["action", "other", "*"]
@@ -73,6 +76,3 @@ Groups.group(j) |> Groups.print_grouped()
 
 IO.puts("Set A")
 Groups.group(a) |> Groups.print_grouped()
-
-# Calculate the size of J{site}, J{org}, J{user}
-# Calculate the size of A{site}, A{org}, A{user}
