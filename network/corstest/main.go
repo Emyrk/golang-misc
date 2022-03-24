@@ -8,39 +8,57 @@ import (
 )
 
 func main() {
-	// go run main.go 8001 https://8002--dogfood-dev--stevenmasley.master.cdr.dev/
+	// go run main.go 8002 https://8001--dogfood-dev--stevenmasley.master.cdr.dev/
 	port := os.Args[1]
 	link := os.Args[2]
 	fmt.Printf("Starting server at port %s with link=%s\n", port, link)
-	if err := http.ListenAndServe(fmt.Sprintf("0.0.0.0:%s", port), handler(link)); err != nil {
+	mux := http.NewServeMux()
+	mux.Handle("/", handler(link))
+	mux.HandleFunc("/ok", func(w http.ResponseWriter, r *http.Request) {
+		_, _ = fmt.Fprint(w, `{"ok":true}`)
+	})
+	if err := http.ListenAndServe(fmt.Sprintf("0.0.0.0:%s", port), http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// w.Header().Set("Access-Control-Allow-Origin", "https://8001--dogfood-dev--stevenmasley.master.cdr.dev/")
+		w.Header().Set("Access-Control-Allow-Credentials", "true")
+		// w.Header().Set("Access-Control-Allow-Headers", "*")
+		// w.Header().Set("Vary", "Origin")
+		o := r.Header.Get("Origin")
+		if o != "" {
+			w.Header().Set("Access-Control-Allow-Origin", o)
+		}
+
+		mux.ServeHTTP(w, r)
+	})); err != nil {
 		log.Fatal(err)
 	}
 }
 
 func handler(link string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Access-Control-Allow-Origin", "*")
-		w.Header().Set("Random", "*")
 		fmt.Fprintf(w, `
 <!DOCTYPE html>
 <html>
 <body>
 
 <div id="demo">
-<h1>The XMLHttpRequest Object</h1>
-<button type="button" onclick="loadDoc()">Change Content</button>
+<h1>Fetch %[1]s</h1>
+<div id="content"></div>
+<button type="button" onclick="loadDoc()">Click me</button>
 </div>
 
 <script>
 function loadDoc() {
 	fetch("%[1]s", {
-		credentials: "same-origin"
+		credentials: "include"
 	})
-	.then(response => response.json())
   .then(resp => {
     console.log(resp);
+		document.getElementById("content").innerHTML = "It worked! Make sure the devurls are not public for testing."
   })
-.catch(err => console.log(err))
+.catch(err => {
+	console.log(err);
+	document.getElementById("content").innerHTML = "It failed, check the console logs"
+})
 }
 </script>
 
