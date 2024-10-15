@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"net/http/httputil"
 	"os"
 )
 
@@ -35,6 +36,8 @@ func main() {
 
 func handler(link string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		out, _ := httputil.DumpRequest(r, true)
+		log.Println(string(out))
 		fmt.Fprintf(w, `
 <!DOCTYPE html>
 <html>
